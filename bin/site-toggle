@@ -1,0 +1,32 @@
+#!/bin/bash
+
+CMDINFO=$(basename "$0")
+
+if [ "$1" = "" ]; then
+    echo "使用法: $CMDINFO [サイト名]"
+    exit 2
+fi
+
+if [ ! -e "/etc/nginx/sites-available/$1.conf" ]; then
+    echo "This site is not exists."
+    exit 1
+fi
+
+if [ -e "/etc/nginx/sites-enabled/$1.conf" ]; then
+    sudo rm -f /etc/nginx/sites-enabled/$1.conf
+
+    if [ $? == 0 ]; then
+        echo "$1 disabled."
+        exit 0
+    fi
+fi
+
+sudo ln -s /etc/nginx/sites-available/$1.conf /etc/nginx/sites-enabled/$1.conf
+
+if [ $? == 0 ]; then
+    echo "$1 enabled."
+    exit 0
+fi
+
+echo "error."
+exit 1
