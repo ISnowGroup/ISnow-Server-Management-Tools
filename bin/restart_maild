@@ -1,0 +1,300 @@
+#!/bin/bash
+function timeout_win() {
+	read -p -r "続行するには何かキーを押してください ..."
+}
+function restart_dove() {
+	echo -e -n "\e[38;5;10m\e[1mDOVECOT POP3/IMAP デーモンを再起動しています\e[m... "
+	systemctl restart dovecot > /dev/null
+	dovecotstatus="$?"
+	if [ "$dovecotstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function reload_dove() {
+	echo -e -n "\e[38;5;10m\e[1mDOVECOT POP3/IMAP デーモンを再読み込みしています\e[m... "
+	systemctl reload dovecot > /dev/null
+	dovecotstatus="$?"
+	if [ "$dovecotstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function start_dove() {
+	echo -e -n "\e[38;5;10m\e[1mDOVECOT POP3/IMAP デーモンを起動しています\e[m... "
+	systemctl start dovecot > /dev/null
+	dovecotstatus="$?"
+	if [ "$dovecotstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function stop_dove() {
+	echo -e -n "\e[38;5;10m\e[1mDOVECOT POP3/IMAP デーモンを停止しています\e[m... "
+	systemctl stop dovecot > /dev/null
+	dovecotstatus="$?"
+	if [ "$dovecotstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function enable_dove() {
+	echo -e -n "\e[38;5;10m\e[1mDOVECOT POP3/IMAP デーモンの自動起動を有効化しています\e[m... "
+	systemctl enable dovecot > /dev/null
+	dovecotstatus="$?"
+	if [ "$dovecotstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function disable_dove() {
+	echo -e -n "\e[38;5;10m\e[1mDOVECOT POP3/IMAP デーモンの自動起動を無効化しています\e[m... "
+	systemctl disable dovecot > /dev/null
+	dovecotstatus="$?"
+	if [ "$dovecotstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function stat_dove() {
+	screen systemctl status dovecot
+	return 0
+}
+
+function stat_postf() {
+	screen systemctl status postfix
+	return 0
+}
+function stop_postf() {
+	echo -e -n "\e[38;5;10m\e[1mPOSTFIX SMTP デーモンを停止しています\e[m... "
+	systemctl stop postfix > /dev/null
+	postfstatus="$?"
+	if [ "$postfstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function enable_postf() {
+	echo -e -n "\e[38;5;10m\e[1mPOSTFIX SMTP デーモンの自動起動を有効化しています\e[m... "
+	systemctl enable postfix > /dev/null
+	postfstatus="$?"
+	if [ "$postfstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function disable_postf() {
+	echo -e -n "\e[38;5;10m\e[1mPOSTFIX SMTP デーモンの自動起動を無効化しています\e[m... "
+	systemctl disable postfix > /dev/null
+	postfstatus="$?"
+	if [ "$postfstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function restart_postf() {
+	echo -e -n "\e[38;5;10m\e[1mPOSTFIX SMTP デーモンを再起動しています\e[m... "
+	systemctl restart postfix > /dev/null
+	postfstatus="$?"
+	if [ "$postfstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function reload_postf() {
+	echo -e -n "\e[38;5;10m\e[1mPOSTFIX SMTP デーモンを再読み込みしています\e[m... "
+	systemctl reload postfix > /dev/null
+	postfstatus="$?"
+	if [ "$postfstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function start_postf() {
+	echo -e -n "\e[38;5;10m\e[1mPOSTFIX SMTP デーモンを起動しています\e[m... "
+	systemctl start postfix > /dev/null
+	postfstatus="$?"
+	if [ "$postfstatus" != "0" ]; then
+		echo -e "\e[38;5;9m\e[1mエラー\e[m"
+		return 1
+		taskcomp="2"
+	else
+		echo -e "\e[38;5;10m\e[1m完了\e[m"
+		return 0
+	fi
+}
+function disphelp() {
+	CMDINFO=$(basename "$0")
+	echo -e " ISnow Server Management Tools"
+	echo -e "  Mail Daemons Controller v1.0"
+	echo -e " Copyright (c) 2021 ISnow Group / (c) 2021 Kori S.\n"
+	echo -e " 使用法： $CMDINFO (-h|-l|-k|-r|-s|-e|-d) [(-p|-v)]"
+	echo -e "          $CMDINFO -i (-p|-v)\n"
+	echo -e " 引数一覧:"
+	#         123456789012345678901109876543210987654321
+	echo -e " +----+-----------第一引数----------------+"
+	echo -e " | -h | ヘルプを表示します                |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -l | 再読み込みします                  |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -k | 停止します                        |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -r | 再起動します                      |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -s | 起動します                        |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -e | 自動起動を有効化します            |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -d | 自動起動を無効化します            |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -i | 状態を確認します.必須：第二引数   |"
+	echo -e " +----+-----------------------------------+\n"
+	#         123456789012345678901109876543210987654321
+	echo -e " +----+-----------第二引数----------------+"
+	echo -e " | -p | Postfixのみに対して操作を行います |"
+	echo -e " +----+-----------------------------------+"
+	echo -e " | -v | Dovecotに対してのみ操作を行います |"
+	echo -e " +----+-----------------------------------+"
+	echo -e "\n このツールの動作保証はいたしません。自己責任でお使いくださいませ\n"
+	exit 1
+}
+function managecmd() {
+	if [ "$1" == "r" ]; then
+		if [ "$2" == "" ]; then
+			restart_dove
+			restart_postf
+		elif [ "$2" == "-p" ]; then
+			restart_postf
+		elif [ "$2" == "-v" ]; then
+			restart_dove
+		fi
+	elif [ "$1" == "s" ]; then
+		if [ "$2" == "" ]; then
+			start_dove
+			start_postf
+		elif [ "$2" == "-p" ]; then
+			start_postf
+		elif [ "$2" == "-v" ]; then
+			start_dove
+		fi
+	elif [ "$1" == "k" ]; then
+		if [ "$2" == "" ]; then
+			stop_dove
+			stop_postf
+		elif [ "$2" == "-p" ]; then
+			stop_postf
+		elif [ "$2" == "-v" ]; then
+			stop_dove
+		fi
+	elif [ "$1" == "l" ]; then
+		if [ "$2" == "" ]; then
+			reload_dove
+			reload_postf
+		elif [ "$2" == "-p" ]; then
+			reload_postf
+		elif [ "$2" == "-v" ]; then
+			reload_dove
+		fi
+	elif [ "$1" == "d" ]; then
+		if [ "$2" == "" ]; then
+			disable_dove
+			disable_postf
+		elif [ "$2" == "-p" ]; then
+			disable_postf
+		elif [ "$2" == "-v" ]; then
+			disable_dove
+		fi
+	elif [ "$1" == "e" ]; then
+		if [ "$2" == "" ]; then
+			enable_dove
+			enable_postf
+		elif [ "$2" == "-p" ]; then
+			enable_postf
+		elif [ "$2" == "-v" ]; then
+			enable_dove
+		fi
+	elif [ "$1" == "i" ]; then
+		if [ "$2" == "" ]; then
+			disphelp
+			taskcomp="2"
+		elif [ "$2" == "-p" ]; then
+			stat_postf
+		elif [ "$2" == "-v" ]; then
+			stat_dove
+		fi
+	fi
+}
+taskcomp="1"
+if [ "$1" == "-h" ]; then
+	disphelp
+	taskcomp="0"
+elif [ "$1" == "-s" ]; then
+	managecmd "s" "$2"
+elif [ "$1" == "-k" ]; then
+	managecmd "k" "$2"
+elif [ "$1" == "-r" ]; then
+	managecmd "r" "$2"
+elif [ "$1" == "-l" ]; then
+	managecmd "l" "$2"
+elif [ "$1" == "-e" ]; then
+	managecmd "e" "$2"
+elif [ "$1" == "-d" ]; then
+	managecmd "d" "$2"
+elif [ "$1" == "-i" ]; then
+	managecmd "i" "$2"
+else
+	disphelp
+	taskcomp="0"
+fi
+if [ "$taskcomp" == "1" ]; then
+	echo -e "タスクが終了しました。"
+elif [ "$taskcomp" == "2" ]; then
+	echo -e "タスクは終了しましたが、一部は失敗した可能性があります。"
+	timeout_win
+else
+	timeout_win
+fi
