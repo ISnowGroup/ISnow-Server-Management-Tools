@@ -1,32 +1,26 @@
 #!/bin/bash
-
-CMDINFO=$(basename "$0")
-
-if [ "$1" = "" ]; then
-    echo "使用法: $CMDINFO [サイト名]"
-    exit 2
-fi
-
 if [ ! -e "/etc/nginx/sites-available/$1.conf" ]; then
-    echo "This site is not exists."
-    exit 1
+    /bin/echo -e "\e[91mそのサイト設定は存在しません。\e[0m\n"
+    exit
 fi
 
 if [ -e "/etc/nginx/sites-enabled/$1.conf" ]; then
     sudo rm -f /etc/nginx/sites-enabled/$1.conf
 
     if [ $? == 0 ]; then
-        echo "$1 disabled."
-        exit 0
+        /bin/echo -e "\e[92m$1 を無効化しました。\n"
+        /bin/echo -e "\e[1;97;101mサイト切り替えを反映するには nginx の再読み込みか再起動が必要です。\e[0m\n"
+        exit
     fi
 fi
 
 sudo ln -s /etc/nginx/sites-available/$1.conf /etc/nginx/sites-enabled/$1.conf
 
 if [ $? == 0 ]; then
-    echo "$1 enabled."
-    exit 0
+    /bin/echo -e "\033]92m$1 を有効化しました。\n"
+    /bin/echo -e "\e[1;97;101mサイト切り替えを反映するには nginx の再読み込みか再起動が必要です。\033]0m\n"
+    exit
 fi
 
-echo "error."
-exit 1
+/bin/echo -e "\e[91mエラーが発生しました。\e[0m\n"
+exit
