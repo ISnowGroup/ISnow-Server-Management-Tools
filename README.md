@@ -13,13 +13,14 @@ Apache2関連のコマンドはsystemctlで行っていますが`httpd`ではな
 ## 注意事項
 - `restart_*`で情報確認をした際に、キャレット記法で表現されるキーを押すと、キャレットだけ外れて、プロンプトに残ります。
   - ex 1: `続行するには何かキーを押してください ...` で `↓` を押すと `^[B` が送出され、プロンプトに `[B` だけが残ります。
+- `sudo` の$PATHに `/usr/local/bin` が乗らない環境では実行できません。
 ## コマンドの構文
 ### restart_apache / restart_nginx
 ```sh
 # Apache2
-restart_apache options
+sudo restart_apache options
 # NGINX
-restart_nginx options
+sudo restart_nginx options
 ```
 options
 * `-h` ヘルプを表示します。引数なしも同様です。
@@ -33,8 +34,8 @@ options
 
 ### restart_maild
 ```sh
-restart_maild options [target]
-restart_maild -i target
+sudo restart_maild options [target]
+sudo restart_maild -i target
 ```
 options
 * `-h` ヘルプを表示します。引数なしも同様です。
