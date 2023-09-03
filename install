@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "ISnow Server Management Toolsをインストールしています……"
+sudo mkdir -p /usr/local/bin
+sudo cp -v ./bin/* /usr/local/bin/
+echo "インストール完了！"
+
