@@ -1,0 +1,38 @@
+#!/bin/bash
+if [ $# = 0 ]; then
+        echo -e "引数を入力する必要があります。"
+        echo -e "空のファイルを作る場合は、"
+        echo -e "\"-e\"を引数に指定してください。"
+        echo -e "\n\n"
+        echo -e "コマンドはコード1で異常終了しました。"
+        exit 1
+else
+        sudo nano $@
+        editexit=$?
+        if [ $editexit -eq 0 ]; then
+                echo -e "コマンドはコード0で終了しました。"
+                exit $editexit
+        elif [ $editexit -le 125 ]; then
+                echo -e "コマンドはコード${editexit}で異常終了しました。"
+                exit $editexit
+        elif [ $editexit -eq 126 ]; then
+                echo -e "コマンドはコード126で異常終了しました。"
+                echo -e "実行が許可されたユーザーかご確認ください。"
+                exit $editexit
+        elif [ $editexit -ge 255 ]; then
+                echo -e "コマンドはコード255で異常終了しました。"
+                echo -e "sudoまたはnanoのいずれかが破損している可能性があります。"
+                echo -e "コマンドを修復するか再インストールしてください。"
+                exit 255
+        elif [ $editexit -eq 127 ]; then
+                echo -e "'se'ランチャーコマンドはターゲットを見つけられませんでした。"
+                echo -e "sudoかnanoのいずれかがインストールされていない可能性があります。"
+                exit $editexit
+        elif [ $editexit -ge 128 ]; then
+                echo -e "コマンドはシグナルによってコード${editexit}で異常終了しました。"
+                exit $editexit
+        else
+                echo -e "コマンドはコード${editexit}で異常終了しました。"
+                exit $editexit
+        fi
+fi
