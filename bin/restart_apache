@@ -1,0 +1,162 @@
+#!/bin/bash
+function timeout_win() {
+        read -n1 -s -r -p $'続行するには何かキーを押してください ...\n'
+}
+function restart_ngi() {
+        echo -e -n "\e[38;5;10m\e[1mApache HTTP サーバーを再起動しています\e[m... \n"
+        systemctl restart apache2 > /dev/null
+        apache2status="$?"
+        if [ "$apache2status" != "0" ]; then
+                echo -e "\e[38;5;9m\e[1mエラー\e[m"
+                return 1
+                taskcomp="2"
+        else
+                echo -e "\e[38;5;10m\e[1m完了\e[m"
+                return 0
+        fi
+}
+function reload_ngi() {
+        echo -e -n "\e[38;5;10m\e[1mApache HTTP サーバーを再読み込みしています\e[m... \n"
+        systemctl reload apache2 > /dev/null
+        apache2status="$?"
+        if [ "$apache2status" != "0" ]; then
+                echo -e "\e[38;5;9m\e[1mエラー\e[m"
+                return 1
+                taskcomp="2"
+        else
+                echo -e "\e[38;5;10m\e[1m完了\e[m"
+                return 0
+        fi
+}
+function start_ngi() {
+        echo -e -n "\e[38;5;10m\e[1mApache HTTP サーバーを起動しています\e[m... \n"
+        systemctl start apache2 > /dev/null
+        apache2status="$?"
+        if [ "$apache2status" != "0" ]; then
+                echo -e "\e[38;5;9m\e[1mエラー\e[m"
+                return 1
+                taskcomp="2"
+        else
+                echo -e "\e[38;5;10m\e[1m完了\e[m"
+                return 0
+        fi
+}
+function stop_ngi() {
+        echo -e -n "\e[38;5;10m\e[1mApache HTTP サーバーを停止しています\e[m... \n"
+        systemctl stop apache2 > /dev/null
+        apache2status="$?"
+        if [ "$apache2status" != "0" ]; then
+                echo -e "\e[38;5;9m\e[1mエラー\e[m"
+                return 1
+                taskcomp="2"
+        else
+                echo -e "\e[38;5;10m\e[1m完了\e[m"
+                return 0
+        fi
+}
+function enable_ngi() {
+        echo -e -n "\e[38;5;10m\e[1mApache HTTP サーバーの自動起動を有効化しています\e[m... \n"
+        systemctl enable apache2 > /dev/null
+        apache2status="$?"
+        if [ "$apache2status" != "0" ]; then
+                echo -e "\e[38;5;9m\e[1mエラー\e[m"
+                return 1
+                taskcomp="2"
+        else
+                echo -e "\e[38;5;10m\e[1m完了\e[m"
+                return 0
+        fi
+}
+function disable_ngi() {
+        echo -e -n "\e[38;5;10m\e[1mApache HTTP サーバーの自動起動を無効化しています\e[m... \n"
+        systemctl disable apache2 > /dev/null
+        apache2status="$?"
+        if [ "$apache2status" != "0" ]; then
+                echo -e "\e[38;5;9m\e[1mエラー\e[m"
+                return 1
+                taskcomp="2"
+        else
+                echo -e "\e[38;5;10m\e[1m完了\e[m"
+                return 0
+        fi
+}
+function stat_ngi() {
+        systemctl status apache2
+        timeout_win
+        return 0
+}
+function disphelp() {
+        CMDINFO=$(basename "$0")
+        echo -e " ISnow Server Management Tools"
+        echo -e "  Apache2 Service Controller v1.0"
+        echo -e " Copyright (c) 2021 ISnow Group / (c) 2021 Kori S.\n"
+        echo -e " 使用法： $CMDINFO (-h|-l|-k|-r|-s|-e|-d|-i)"
+        echo -e " 引数一覧:"
+        #         123456789012345678901109876543210987654321
+        echo -e " +----+-----第一引数----------+"
+        echo -e " | -h | ヘルプを表示します    |"
+        echo -e " +----+-----------------------+"
+        echo -e " | -l | 再読み込みします      |"
+        echo -e " +----+-----------------------+"
+        echo -e " | -k | 停止します            |"
+        echo -e " +----+-----------------------+"
+        echo -e " | -r | 再起動します          |"
+        echo -e " +----+-----------------------+"
+        echo -e " | -s | 起動します            |"
+        echo -e " +----+-----------------------+"
+        echo -e " | -e | 自動起動を有効化します|"
+        echo -e " +----+-----------------------+"
+        echo -e " | -d | 自動起動を無効化します|"
+        echo -e " +----+-----------------------+"
+        echo -e " | -i | 状態を確認します      |"
+        echo -e " +----+-----------------------+\n"
+        echo -e "\n このツールの動作保証はいたしません。自己責任でお使いくださいませ\n"
+        exit 1
+}
+function managecmd() {
+        if [ "$1" == "r" ]; then
+                restart_ngi
+        elif [ "$1" == "s" ]; then
+                start_ngi
+        elif [ "$1" == "k" ]; then
+                stop_ngi
+        elif [ "$1" == "l" ]; then
+                reload_ngi
+        elif [ "$1" == "d" ]; then
+                disable_ngi
+        elif [ "$1" == "e" ]; then
+                enable_ngi
+        elif [ "$1" == "i" ]; then
+                stat_ngi
+        fi
+}
+taskcomp="1"
+if [ "$1" == "-h" ]; then
+        disphelp
+        taskcomp="0"
+elif [ "$1" == "-s" ]; then
+        managecmd "s" "$2"
+elif [ "$1" == "-k" ]; then
+        managecmd "k" "$2"
+elif [ "$1" == "-r" ]; then
+        managecmd "r" "$2"
+elif [ "$1" == "-l" ]; then
+        managecmd "l" "$2"
+elif [ "$1" == "-e" ]; then
+        managecmd "e" "$2"
+elif [ "$1" == "-d" ]; then
+        managecmd "d" "$2"
+elif [ "$1" == "-i" ]; then
+        managecmd "i" "$2"
+else
+        disphelp
+        taskcomp="0"
+fi
+if [ "$taskcomp" == "1" ]; then
+        echo -e "タスクが終了しました。"
+elif [ "$taskcomp" == "2" ]; then
+        echo -e "タスクは終了しましたが、一部は失敗した可能性があります。"
+        timeout_win
+else
+        timeout_win
+fi
