@@ -90,7 +90,7 @@ function disphelp() {
         echo -e " ISnow Server Management Tools"
         echo -e "  nginx Service Controller v1.0"
         echo -e " Copyright (c) 2021 ISnow Group / (c) 2021 Kori S.\n"
-        echo -e " 使用法： $CMDINFO (-h|-l|-k|-r|-s|-e|-d-i)"
+        echo -e " 使用法： $CMDINFO (-h|-l|-k|-r|-s|-e|-d|-i)"
         echo -e " 引数一覧:"
         #         123456789012345678901109876543210987654321
         echo -e " +----+-----第一引数----------+"
