@@ -1,10 +1,11 @@
 # ISnow-Server-Management-Tools
 ISnow Server Management Toolsはサーバー管理用のスクリプトセットです。
 ## 動作環境
-Ubuntu 18.04 LTS,20.04 LTS  
-**CentOSやRHEL,ArchLinuxなどでは動作しない可能性もあります。  
-またbashの機能も利用していますので、dash環境のDebianでも動作しない可能性があります。**  
-WindowsやMS-DOSまたはそれに類するOSでは(シェル的にもコマンド的にも)機能しません。WSLでは動作しません。  
+Ubuntu 18.04 LTS, 20.04 LTS, 22.04 LTS  
+**RockeyLinuxやRHEL, ArchLinuxなどでは動作しない可能性もあります。  
+またbashの機能も利用していますので、bashがインストールされていないDebianでも動作しない可能性があります。(Debianの基本のシェルは`dash`)  
+その他、DebianやUbuntuの派生ディストリビューションでも、systemdを使用しないディストリビューションでは動作しません。**  
+WindowsやMS-DOSまたはそれに類するOSでは(シェル的にもコマンド的にも)機能しません。WSLや通常のWSL2では動作しません。  
 ただし、systemdを有効にしたWSL2 (Ubuntu)では動作する可能性があります。  
 ファイルパスやコマンドはUbuntuでの配置を基準にしているため、ファイルパスが存在しなかったり、コマンドが実行出来ない場合もあります。  
 Apache2関連のコマンドはsystemctlで行っていますが`httpd`ではなく`apache2`として処理していますのでapache2でコマンド実行出来るかご確認ください。  
@@ -13,7 +14,7 @@ Apache2関連のコマンドはsystemctlで行っていますが`httpd`ではな
 ### restart_apache / restart_nginx
 ```sh
 # Apache2
-restart_nginx options
+restart_apache options
 # NGINX
 restart_nginx options
 ```
